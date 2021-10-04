@@ -17,24 +17,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
-public class Client {
-
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true)
-    private String login;
     private String password;
     @Column(unique = true)
+    private String login;
+    @Column(unique = true)
     private Long cars_id;
-    @Column(unique = true)
-    private String RG;
-    @Column(unique = true)
-    private String CPF;
-    private String name;
-    private String address;
-    private String profession;
-    private String employer_entities;
-    private String income;
 }

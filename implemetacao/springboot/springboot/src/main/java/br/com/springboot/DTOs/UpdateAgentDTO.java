@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateAgentDTO {
-    private String nome;
-    private String endereco;
+    private String login;
+    private String password;
+    private String name;
 }

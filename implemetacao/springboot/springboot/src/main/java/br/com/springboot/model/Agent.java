@@ -1,5 +1,6 @@
 package br.com.springboot.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,8 +23,10 @@ public class Agent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String cnpj;
-    private String nome;
-    private String endereco;
-    private String categoria_agente;
+    @Column(unique = true)
+    private String login;
+    private String password;
+    private String name;
+    private String CNPJ;
+    private String company;
 }

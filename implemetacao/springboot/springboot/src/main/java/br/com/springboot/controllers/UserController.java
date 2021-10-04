@@ -3,7 +3,9 @@ package br.com.springboot.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,116 +14,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.springboot.DTOs.UpdateAgentDTO;
-import br.com.springboot.DTOs.UpdtaeClientDTO;
-import br.com.springboot.model.Agent;
-import br.com.springboot.model.Client;
-import br.com.springboot.repository.AgentRepository;
-import br.com.springboot.repository.ClientRepository;
+import br.com.springboot.DTOs.UpdateUserDTO;
+import br.com.springboot.model.User;
+import br.com.springboot.repository.UserRepository;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private UserRepository userRepository;
 
-    @Autowired
-    private AgentRepository agentRepository;
-
-    @PostMapping("/client")
-    public Client postClient(@RequestBody Client client) {
-        return this.clientRepository.save(client);
+    @PostMapping("/subscribe")
+    public ResponseEntity<String> postUser(@RequestBody User user) {
+        try {
+            this.userRepository.save(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
     }
 
-    @PostMapping("/agent")
-    public Agent postAgent(@RequestBody Agent agent) {
-        return this.agentRepository.save(agent);
-    }
+    @GetMapping("/login/{id}")
+    public User getUser(@PathVariable("id") Long id) {
 
-    @GetMapping("/clinet/{id}")
-    public Client getClient(@PathVariable("id") Long id) {
+        Optional<User> userFind = this.userRepository.findById(id);
 
-        Optional<Client> clientFind = this.clientRepository.findById(id);
-        if (clientFind.isPresent()) {
-            return clientFind.get();
+        if (userFind.isPresent()) {
+            return userFind.get();
         }
         return null;
     }
 
-    @GetMapping("/agent/{id}")
-    public Agent getAgent(@PathVariable("id") Long id) {
+    @PutMapping("/login/{id}")
+    public User putAgent(@RequestBody UpdateUserDTO updateUserDTO, @PathVariable("id") Long id) {
 
-        Optional<Agent> agentFind = this.agentRepository.findById(id);
+        Optional<User> userFind = this.userRepository.findById(id);
 
-        if (agentFind.isPresent()) {
-            return agentFind.get();
-        }
-        return null;
-    }
-
-    @PutMapping("client/{id}")
-    public Client putClient(@RequestBody UpdtaeClientDTO updtaeClientDTO, @PathVariable("id") Long id) {
-
-        Optional<Client> clientFind = this.clientRepository.findById(id);
-
-        if (clientFind.isPresent()) {
-            Client client = clientFind.get();
-            if (!updtaeClientDTO.getNome().isEmpty()) {
-                client.setNome(updtaeClientDTO.getNome());
+        if (userFind.isPresent()) {
+            User user = userFind.get();
+            if (!updateUserDTO.getLogin().isEmpty()) {
+                user.setLogin(updateUserDTO.getLogin());
             }
-            if (!updtaeClientDTO.getEndereco().isEmpty()) {
-                client.setEndereco(updtaeClientDTO.getEndereco());
-            }
-            if (!updtaeClientDTO.getProfissao().isEmpty()) {
-                client.setProfissao(updtaeClientDTO.getProfissao());
+            if (!updateUserDTO.getPassword().isEmpty()) {
+                user.setPassword(updateUserDTO.getPassword());
             }
 
-            return this.clientRepository.save(client);
+            return this.userRepository.save(user);
 
         }
         return null;
-    }
-
-
-    @PutMapping("agent/{id}")
-    public Agent putAgent(@RequestBody UpdateAgentDTO updateAgentDTO,@PathVariable("id") Long id) {
-
-        Optional<Agent> agentFind = this.agentRepository.findById(id);
-
-        if (agentFind.isPresent()) {
-            Agent agent = agentFind.get();
-            if (!updateAgentDTO.getEndereco().isEmpty()) {
-                agent.setEndereco(updateAgentDTO.getEndereco());
-            }
-            if (!updateAgentDTO.getNome().isEmpty()) {
-                agent.setNome(updateAgentDTO.getNome());
-            }
-
-            return this.agentRepository.save(agent);
-
-        }
-        return null;
-    }
-
-    @DeleteMapping("client/{id}")
-    public void deleteClient( @PathVariable("id") Long id) {
-
-        Optional<Client> clientFind = this.clientRepository.findById(id);
-
-        if (clientFind.isPresent()) {
-            this.clientRepository.deleteById(id);
-        }
-    }
-
-    @DeleteMapping("agent/{id}")
-    public void deleteAgent(@PathVariable("id") Long id) {
-
-        Optional<Agent> agentFind = this.agentRepository.findById(id);
-
-        if (agentFind.isPresent()) {
-            this.agentRepository.deleteById(id);
-        }
     }
 
 }

@@ -18,23 +18,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table
-public class Client {
+public class Cars {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Long request_id;
+    private int year;
+    private String brand;
+    private String model;
     @Column(unique = true)
-    private String login;
-    private String password;
-    @Column(unique = true)
-    private Long cars_id;
-    @Column(unique = true)
-    private String RG;
-    @Column(unique = true)
-    private String CPF;
-    private String name;
-    private String address;
-    private String profession;
-    private String employer_entities;
-    private String income;
+    private String plate;
 }
